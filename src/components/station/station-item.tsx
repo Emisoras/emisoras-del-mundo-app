@@ -52,26 +52,28 @@ export default function StationItem({ station }: StationItemProps) {
         router.push('/now-playing');
       }}
     >
-      <CardContent className="p-2 md:p-3 flex items-center">
+      <CardContent className="p-2 flex items-center gap-x-2">
+        {/* Logo */}
         <div className="flex-shrink-0">
           {station.logoUrl ? (
               <Image 
                 src={station.logoUrl} 
                 alt={station.name} 
-                width={48} 
-                height={48} 
-                className="w-10 h-10 md:w-12 md:h-12 rounded-md aspect-square object-cover"
+                width={40}
+                height={40}
+                className="w-10 h-10 rounded-md aspect-square object-cover"
                 data-ai-hint="radio logo"
               />
             ) : (
-              <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-muted flex items-center justify-center">
-                <RadioIcon className="h-5 w-5 md:h-6 md:h-6 text-muted-foreground" />
+              <div className="w-10 h-10 rounded-md bg-muted flex items-center justify-center">
+                <RadioIcon className="h-5 w-5 text-muted-foreground" />
               </div>
             )}
         </div>
 
-        <div className="flex-1 min-w-0 mx-2 md:mx-3">
-          <p className="font-semibold text-foreground truncate text-sm md:text-base">{station.name}</p>
+        {/* Text Info */}
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-foreground truncate text-sm">{station.name}</p>
           <p className="text-xs text-muted-foreground truncate">
             {station.city ? `${station.city}, ` : ''}
             {station.state ? `${station.state}, ` : ''}
@@ -80,17 +82,18 @@ export default function StationItem({ station }: StationItemProps) {
           </p>
         </div>
         
-        <div className="flex items-center space-x-1 flex-shrink-0">
-          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:h-10" onClick={handleFavoriteClick} aria-label={stationIsFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
-            <Heart className={`h-4 w-4 md:h-5 md:h-5 ${stationIsFavorite ? 'text-primary fill-current' : 'text-muted-foreground'}`} />
+        {/* Action Buttons */}
+        <div className="flex items-center flex-shrink-0">
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleFavoriteClick} aria-label={stationIsFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
+            <Heart className={`h-4 w-4 ${stationIsFavorite ? 'text-primary fill-current' : 'text-muted-foreground'}`} />
           </Button>
-          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:h-10" onClick={handlePlayClick} aria-label={isCurrentPlayingStation ? "Pausar" : "Reproducir"}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handlePlayClick} aria-label={isCurrentPlayingStation ? "Pausar" : "Reproducir"}>
             {isCurrentStationLoading ? (
-              <Loader2 className="h-5 w-5 md:h-6 md:h-6 animate-spin text-primary" />
+              <Loader2 className="h-5 w-5 animate-spin text-primary" />
             ) : isCurrentPlayingStation ? (
-              <PauseCircle className="h-5 w-5 md:h-6 md:h-6 text-primary" />
+              <PauseCircle className="h-5 w-5 text-primary" />
             ) : (
-              <PlayCircle className="h-5 w-5 md:h-6 md:h-6 text-primary" />
+              <PlayCircle className="h-5 w-5 text-primary" />
             )}
           </Button>
         </div>
