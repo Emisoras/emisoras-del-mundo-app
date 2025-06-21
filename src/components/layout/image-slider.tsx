@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { cn } from '@/lib/utils';
 
 interface ImageSliderProps {
   images: { src: string; alt: string; dataAiHint?: string }[];
@@ -14,37 +16,50 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ images, interval = 5000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const isMobile = useIsMobile();
+
+  const slidesPerPage = isMobile ? 1 : 2;
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 2 >= images.length ? 0 : prevIndex + 2));
-  }, [images.length]);
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex + slidesPerPage;
+      return nextIndex >= images.length ? 0 : nextIndex;
+    });
+  }, [images.length, slidesPerPage]);
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 2 < 0 ? images.length - (images.length % 2 === 0 ? 2 : 1) : prevIndex - 2));
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex - slidesPerPage < 0) {
+        // Go to the last possible page
+        return Math.floor((images.length - 1) / slidesPerPage) * slidesPerPage;
+      }
+      return prevIndex - slidesPerPage;
+    });
   };
 
   useEffect(() => {
-    if (images.length <= 2) return; // No need to slide if 2 or fewer images
+    // Reset index if slidesPerPage changes to avoid being out of bounds
+    setCurrentIndex(0);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (images.length <= slidesPerPage) return;
     const autoPlayTimer = setInterval(nextSlide, interval);
     return () => clearInterval(autoPlayTimer);
-  }, [nextSlide, interval, images.length]);
+  }, [nextSlide, interval, images.length, slidesPerPage]);
 
-  if (!images || images.length === 0) {
+  if (!images || images.length === 0 || currentIndex >= images.length) {
     return null;
   }
 
   const currentImage1 = images[currentIndex];
-  const currentImage2 = images.length > 1 ? images[(currentIndex + 1) % images.length] : null;
-  
-  // Ensure we don't show the same image twice if there's an odd number and we are at the end
-  const displaySecondImage = images.length > 1 && (currentIndex + 1) < images.length;
-
+  const currentImage2 = !isMobile && images.length > currentIndex + 1 ? images[currentIndex + 1] : null;
 
   return (
     <div className="relative w-full">
       <div className="flex justify-center items-center gap-4 overflow-hidden">
         {currentImage1 && (
-          <Card className="w-1/2 shadow-md overflow-hidden">
+          <Card className={cn("shadow-md overflow-hidden transition-all", isMobile ? "w-full" : "w-1/2")}>
             <CardContent className="p-0">
               <Image
                 src={currentImage1.src}
@@ -57,7 +72,7 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
             </CardContent>
           </Card>
         )}
-        {displaySecondImage && currentImage2 && (
+        {currentImage2 && (
           <Card className="w-1/2 shadow-md overflow-hidden">
             <CardContent className="p-0">
               <Image
@@ -72,7 +87,7 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
           </Card>
         )}
       </div>
-      {images.length > 2 && (
+      {images.length > slidesPerPage && (
         <>
           <Button
             variant="outline"

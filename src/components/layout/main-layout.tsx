@@ -1,3 +1,4 @@
+
 import type { ReactNode } from 'react';
 import AppHeader from './app-header';
 import BottomPlayer from './bottom-player';
@@ -20,13 +21,13 @@ export default function MainLayout({ activeTab, onTabChange, emisorasContent, po
           <TabsList className="grid w-full grid-cols-2 mb-4">
             <TabsTrigger 
               value="emisoras" 
-              className="pb-2 text-lg data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              className="pb-2 text-base md:text-lg data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
               Emisoras
             </TabsTrigger>
             <TabsTrigger 
               value="podcasts" 
-              className="pb-2 text-lg data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
+              className="pb-2 text-base md:text-lg data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:text-primary text-muted-foreground hover:text-foreground transition-colors data-[state=inactive]:bg-transparent data-[state=active]:bg-transparent data-[state=active]:shadow-none"
             >
               Podcasts
             </TabsTrigger>

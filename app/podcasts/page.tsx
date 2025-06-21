@@ -13,9 +13,9 @@ export default function PodcastsPage() {
     <div className="flex min-h-screen flex-col bg-background">
       <AppHeader />
       <div className="container mx-auto px-4 py-2 flex-grow flex flex-col">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold text-foreground">Podcasts</h1>
-          <Button asChild variant="outline" size="sm">
+        <div className="flex flex-col gap-4 mb-4 sm:flex-row sm:items-center sm:justify-between">
+          <h1 className="text-2xl font-bold text-foreground text-center sm:text-left">Podcasts</h1>
+          <Button asChild variant="outline" size="sm" className="w-full sm:w-auto">
             <Link href="/">
               <ArrowLeft className="mr-2 h-4 w-4" /> Volver a Emisoras
             </Link>
