@@ -53,7 +53,7 @@ export default function StationItem({ station }: StationItemProps) {
         router.push('/now-playing');
       }}
     >
-      <CardContent className="p-2 md:p-3 flex items-center space-x-2 md:space-x-3">
+      <CardContent className="p-2 md:p-3 flex items-center space-x-3">
         {station.logoUrl ? (
             <Image 
               src={station.logoUrl} 
@@ -77,11 +77,11 @@ export default function StationItem({ station }: StationItemProps) {
             {station.tags && station.tags.length > 0 ? ` • ${station.tags.join(', ')}` : ''}
           </p>
         </div>
-        <div className="flex items-center space-x-1 md:space-x-2">
-          <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:h-10" onClick={handleFavoriteClick} aria-label={stationIsFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
+        <div className="flex items-center space-x-1 md:space-x-2 flex-shrink-0">
+          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:h-10" onClick={handleFavoriteClick} aria-label={stationIsFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
             <Heart className={`h-4 w-4 md:h-5 md:h-5 ${stationIsFavorite ? 'text-primary fill-current' : 'text-muted-foreground'}`} />
           </Button>
-          <Button variant="ghost" size="icon" className="h-8 w-8 md:h-10 md:h-10" onClick={handlePlayClick} aria-label={isCurrentPlayingStation ? "Pausar" : "Reproducir"}>
+          <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:h-10" onClick={handlePlayClick} aria-label={isCurrentPlayingStation ? "Pausar" : "Reproducir"}>
             {isCurrentStationLoading ? (
               <Loader2 className="h-5 w-5 md:h-6 md:h-6 animate-spin text-primary" />
             ) : isCurrentPlayingStation ? (
