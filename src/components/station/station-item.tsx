@@ -1,10 +1,9 @@
-
 "use client";
 
 import type { Station } from '@/types';
 import React from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Import useRouter
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { PlayCircle, PauseCircle, Heart, RadioIcon, Loader2 } from 'lucide-react';
 import { useAudioPlayer } from '@/contexts/audio-player-context';
@@ -16,9 +15,9 @@ interface StationItemProps {
 }
 
 export default function StationItem({ station }: StationItemProps) {
-  const router = useRouter(); // Initialize useRouter
+  const router = useRouter();
   const { currentStation, isPlaying, isLoading: isAudioLoading, playStation, togglePlayPause } = useAudioPlayer();
-  const { favoriteIds, addFavorite, removeFavorite, isFavorite } = useFavorites();
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
 
   const isCurrentPlayingStation = currentStation?.id === station.id && isPlaying;
   const isCurrentStationLoading = currentStation?.id === station.id && isAudioLoading;
@@ -30,7 +29,7 @@ export default function StationItem({ station }: StationItemProps) {
       togglePlayPause();
     } else {
       playStation(station);
-      router.push('/now-playing'); // Navigate to FullScreenPlayer
+      router.push('/now-playing');
     }
   };
 
@@ -46,29 +45,32 @@ export default function StationItem({ station }: StationItemProps) {
   return (
     <Card 
       className="mb-2 hover:bg-accent/10 transition-colors duration-150 ease-in-out shadow-sm cursor-pointer"
-      onClick={() => { // Allow clicking the whole card to play and navigate
+      onClick={() => {
         if (!isCurrentPlayingStation) {
           playStation(station);
         }
         router.push('/now-playing');
       }}
     >
-      <CardContent className="p-2 md:p-3 flex items-center space-x-3">
-        {station.logoUrl ? (
-            <Image 
-              src={station.logoUrl} 
-              alt={station.name} 
-              width={48} 
-              height={48} 
-              className="w-10 h-10 md:w-12 md:h-12 rounded-md aspect-square object-cover flex-shrink-0"
-              data-ai-hint="radio logo"
-            />
-          ) : (
-            <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-muted flex items-center justify-center flex-shrink-0">
-              <RadioIcon className="h-5 w-5 md:h-6 md:h-6 text-muted-foreground" />
-            </div>
-          )}
-        <div className="flex-1 min-w-0">
+      <CardContent className="p-2 md:p-3 flex items-center">
+        <div className="flex-shrink-0">
+          {station.logoUrl ? (
+              <Image 
+                src={station.logoUrl} 
+                alt={station.name} 
+                width={48} 
+                height={48} 
+                className="w-10 h-10 md:w-12 md:h-12 rounded-md aspect-square object-cover"
+                data-ai-hint="radio logo"
+              />
+            ) : (
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-md bg-muted flex items-center justify-center">
+                <RadioIcon className="h-5 w-5 md:h-6 md:h-6 text-muted-foreground" />
+              </div>
+            )}
+        </div>
+
+        <div className="flex-1 min-w-0 mx-2 md:mx-3">
           <p className="font-semibold text-foreground truncate text-sm md:text-base">{station.name}</p>
           <p className="text-xs text-muted-foreground truncate">
             {station.city ? `${station.city}, ` : ''}
@@ -77,7 +79,8 @@ export default function StationItem({ station }: StationItemProps) {
             {station.tags && station.tags.length > 0 ? ` • ${station.tags.join(', ')}` : ''}
           </p>
         </div>
-        <div className="flex items-center space-x-1 md:space-x-2 flex-shrink-0">
+        
+        <div className="flex items-center space-x-1 flex-shrink-0">
           <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:h-10" onClick={handleFavoriteClick} aria-label={stationIsFavorite ? "Quitar de favoritos" : "Añadir a favoritos"}>
             <Heart className={`h-4 w-4 md:h-5 md:h-5 ${stationIsFavorite ? 'text-primary fill-current' : 'text-muted-foreground'}`} />
           </Button>
