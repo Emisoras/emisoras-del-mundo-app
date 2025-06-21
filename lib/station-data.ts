@@ -73,7 +73,7 @@ export const stations: Station[] = [
   {
     id: "4",
     name: "Tu Salsa Radio",
-    ...parseLocation("Colombia"), // Simplified, city/state not specified in source for this one
+    ...parseLocation("America Latina"), // Simplified, city/state not specified in source for this one
     tags: parseGenres("Musica-Salsa"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34934093_ico.png?ts=1748144190",
     streamUrl: "http://149.130.186.0:8020/radio.mp3", // HTTP Stream
@@ -96,6 +96,18 @@ export const stations: Station[] = [
   },
   {
     id: "6",
+    name: "AMAV Radio",
+    ...parseLocation("America Latina"),
+    tags: parseGenres("Rock, Pop"),
+    logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34847228_ico.png?ts=1747777501",
+    streamUrl: "https://stream.zeno.fm/nvziqeidbiouv",
+    whatsappUrl: "https://wa.me/573008346736",
+    instagramUrl: "https://www.instagram.com/artistasdelavoz?igsh=MTJiemt1NzJ4ZDVpZg==",
+    tiktokUrl: "https://tiktok.com/@amavradio",
+    email: "contacto@emisorasdelmundo.com",
+  },
+  {
+    id: "7",
     name: "La UFM Estereo",
     ...parseLocation("Ocaña - Colombia"),
     tags: parseGenres("Música del Mundo"),
@@ -107,7 +119,7 @@ export const stations: Station[] = [
     email: "contacto@emisorasdelmundo.com",
   },
   {
-    id: "7",
+    id: "8",
     name: "Espléndida Radio",
     ...parseLocation("Perú"),
     tags: parseGenres("Salsa Merengue Reggaetón y Mas"),
@@ -119,7 +131,7 @@ export const stations: Station[] = [
     email: "contacto@emisorasdelmundo.com",
   },
   {
-    id: "8",
+    id: "9",
     name: "Orbita Radio",
     ...parseLocation("Perú"),
     tags: parseGenres("Rock - Pop - Baladas"),
@@ -128,18 +140,6 @@ export const stations: Station[] = [
     whatsappUrl: "https://wa.me/51961002379",
     instagramUrl: "https://www.instagram.com/orbitaradiotrujillo/",
     tiktokUrl: "https://www.instagram.com/laufmradio/", // TikTok link is an Instagram URL (La UFM's)
-    email: "contacto@emisorasdelmundo.com",
-  },
-  {
-    id: "9",
-    name: "AMAV Radio",
-    ...parseLocation("America Latina"),
-    tags: parseGenres("Rock, Pop"),
-    logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34847228_ico.png?ts=1747777501",
-    streamUrl: "https://stream.zeno.fm/nvziqeidbiouv",
-    whatsappUrl: "https://wa.me/573008346736",
-    instagramUrl: "https://www.instagram.com/artistasdelavoz?igsh=MTJiemt1NzJ4ZDVpZg==",
-    tiktokUrl: "https://tiktok.com/@amavradio",
     email: "contacto@emisorasdelmundo.com",
   },
   {
