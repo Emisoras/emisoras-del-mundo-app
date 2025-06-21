@@ -4,13 +4,13 @@
   "description": "Escucha tus emisoras favoritas de todo el mundo.",
   "icons": [
     {
-      "src": "https://i.imgur.com/IZQqWe0.jpeg",
+      "src": "https://i.imgur.com/3WgFkms.jpeg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "https://i.imgur.com/IZQqWe0.jpeg",
+      "src": "https://i.imgur.com/3WgFkms.jpeg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
