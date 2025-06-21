@@ -52,7 +52,7 @@ export default function StationItem({ station }: StationItemProps) {
         router.push('/now-playing');
       }}
     >
-      <CardContent className="p-2 flex items-center gap-x-2">
+      <CardContent className="p-2 flex items-center gap-1">
         {/* Logo */}
         <div className="flex-shrink-0">
           {station.logoUrl ? (
