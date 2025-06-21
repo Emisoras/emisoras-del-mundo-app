@@ -52,7 +52,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Baladas"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34851384_ico.png?ts=1747777303",
-    streamUrl: "http://149.130.186.0/listen/amor_stereo/radio.mp3", // Updated HTTPS Zeno link
+    streamUrl: "https://stream.zeno.fm/dcvqppymeuptv", // Updated HTTPS Zeno link
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@amorstereo",
