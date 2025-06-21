@@ -6,8 +6,10 @@ import AppProviders from '@/components/providers/app-providers';
 export const metadata: Metadata = {
   title: 'Emisoras del Mundo',
   description: 'Escucha tus emisoras favoritas de todo el mundo.',
+  manifest: '/manifest.json',
   icons: {
-    icon: '/favicon.ico', // Next.js buscará este archivo en la carpeta /public
+    icon: '/favicon.ico',
+    apple: 'https://i.imgur.com/IZQqWe0.jpeg',
   },
 };
 
@@ -19,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <head>
+        <meta name="theme-color" content="#E77918" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />

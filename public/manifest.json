@@ -1,0 +1,24 @@
+{
+  "name": "Emisoras del Mundo",
+  "short_name": "Emisoras",
+  "description": "Escucha tus emisoras favoritas de todo el mundo.",
+  "icons": [
+    {
+      "src": "https://i.imgur.com/IZQqWe0.jpeg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://i.imgur.com/IZQqWe0.jpeg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#E77918",
+  "background_color": "#000000",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
