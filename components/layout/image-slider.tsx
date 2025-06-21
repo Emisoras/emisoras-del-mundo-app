@@ -17,6 +17,7 @@ interface ImageSliderProps {
 export default function ImageSlider({ images, interval = 5000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
+  const whatsappUrl = "https://wa.me/51941319613";
 
   const slidesPerPage = isMobile ? 1 : 2;
 
@@ -59,32 +60,46 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
     <div className="relative w-full">
       <div className="flex justify-center items-center gap-4 overflow-hidden">
         {currentImage1 && (
-          <Card className={cn("shadow-md overflow-hidden transition-all", isMobile ? "w-full" : "w-1/2")}>
-            <CardContent className="p-0">
-              <Image
-                src={currentImage1.src}
-                alt={currentImage1.alt}
-                width={300}
-                height={150}
-                className="object-cover w-full h-auto aspect-[2/1]"
-                data-ai-hint={currentImage1.dataAiHint}
-              />
-            </CardContent>
-          </Card>
+           <a 
+            href={whatsappUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={cn("block transition-all hover:scale-105", isMobile ? "w-full" : "w-1/2")}
+          >
+            <Card className="shadow-md overflow-hidden">
+              <CardContent className="p-0">
+                <Image
+                  src={currentImage1.src}
+                  alt={currentImage1.alt}
+                  width={300}
+                  height={150}
+                  className="object-cover w-full h-auto aspect-[2/1]"
+                  data-ai-hint={currentImage1.dataAiHint}
+                />
+              </CardContent>
+            </Card>
+          </a>
         )}
         {currentImage2 && (
-          <Card className="w-1/2 shadow-md overflow-hidden">
-            <CardContent className="p-0">
-              <Image
-                src={currentImage2.src}
-                alt={currentImage2.alt}
-                width={300}
-                height={150}
-                className="object-cover w-full h-auto aspect-[2/1]"
-                data-ai-hint={currentImage2.dataAiHint}
-              />
-            </CardContent>
-          </Card>
+          <a 
+            href={whatsappUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="block w-1/2 transition-all hover:scale-105"
+          >
+            <Card className="shadow-md overflow-hidden">
+              <CardContent className="p-0">
+                <Image
+                  src={currentImage2.src}
+                  alt={currentImage2.alt}
+                  width={300}
+                  height={150}
+                  className="object-cover w-full h-auto aspect-[2/1]"
+                  data-ai-hint={currentImage2.dataAiHint}
+                />
+              </CardContent>
+            </Card>
+          </a>
         )}
       </div>
       {images.length > slidesPerPage && (
@@ -93,7 +108,7 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
             variant="outline"
             size="icon"
             className="absolute left-0 top-1/2 -translate-y-1/2 transform bg-background/50 hover:bg-background/80 backdrop-blur-sm rounded-full -ml-2 z-10"
-            onClick={prevSlide}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevSlide(); }}
             aria-label="Anterior"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -102,7 +117,7 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
             variant="outline"
             size="icon"
             className="absolute right-0 top-1/2 -translate-y-1/2 transform bg-background/50 hover:bg-background/80 backdrop-blur-sm rounded-full -mr-2 z-10"
-            onClick={nextSlide}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextSlide(); }}
             aria-label="Siguiente"
           >
             <ChevronRight className="h-6 w-6" />
