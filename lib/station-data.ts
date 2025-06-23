@@ -52,7 +52,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Baladas"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34851384_ico.png?ts=1747777303",
-    streamUrl: "https://stream.zeno.fm/dcvqppymeuptv", // Updated HTTPS Zeno link
+    streamUrl: "https://voicevoz.com/listen/amor_stereo/radio.mp3", // Updated HTTPS Zeno link
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@amorstereo",
@@ -76,7 +76,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"), // Simplified, city/state not specified in source for this one
     tags: parseGenres("Musica-Salsa"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34934093_ico.png?ts=1748144190",
-    streamUrl: "http://149.130.186.0:8020/radio.mp3", // HTTP Stream
+    streamUrl: "https://voicevoz.com/listen/tu_salsa_radio/radio.mp3", // HTTP Stream
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@tusalsaradio",
@@ -88,7 +88,7 @@ export const stations: Station[] = [
     ...parseLocation("Mundo"),
     tags: parseGenres("Noticias del Mundo"),
     logoUrl: "https://i.imgur.com/x7Tvlet.png",
-    streamUrl: "http://149.130.186.0:8010/radio.mp3", // HTTP Stream
+    streamUrl: "https://voicevoz.com/listen/voicevoz/radio.mp3", // HTTP Stream
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/voicevoz/",
     tiktokUrl: "https://www.instagram.com/voicevoz/", // TikTok link is an Instagram URL
