@@ -9,7 +9,7 @@ const parseGenres = (genreString: string): string[] => {
 const parseLocation = (locationString: string): { country: string, city: string | null, state: string | null, countryCode: string, stateCode: string | null } => {
   // Basic parsing, can be expanded
   if (locationString.toLowerCase().includes('ocaña')) {
-    return { country: 'Colombia', city: 'Ocaña', state: '', countryCode: 'CO', stateCode: 'NSA' };
+    return { country: 'Colombia', city: 'Ocaña', state: 'Norte de Santander', countryCode: 'CO', stateCode: 'NSA' };
   }
   if (locationString.toLowerCase() === 'america latina') {
     return { country: 'América Latina', city: null, state: null, countryCode: 'XL', stateCode: null };
@@ -41,9 +41,10 @@ export const stations: Station[] = [
     tags: parseGenres("Rock, Pop"),
     logoUrl: "https://i.imgur.com/wXXfnr5.png",
     streamUrl: "https://voicevoz.com/listen/radio_city_latino/radio.mp3",
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/radio_city_latino.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/radio_city_88.9?igsh=em9sbjlrcnd1a3U4&utm_source=qr",
-    tiktokUrl: "ingcamilo.toro19@gmail.com", // This is an email, will open mail client
+    tiktokUrl: "https://tiktok.com/@radiocitylatino",
     email: "contacto@emisorasdelmundo.com",
   },
   {
@@ -52,7 +53,8 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Baladas"),
     logoUrl: "https://i.imgur.com/z97xeFp.png",
-    streamUrl: "https://voicevoz.com/listen/amor_stereo/radio.mp3", // Updated HTTPS Zeno link
+    streamUrl: "https://voicevoz.com/listen/amor_stereo/radio.mp3", 
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/amor_stereo.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@amorstereo",
@@ -65,6 +67,7 @@ export const stations: Station[] = [
     tags: parseGenres("Musica"),
     logoUrl: "https://i.imgur.com/1QH70nH.png",
     streamUrl: "https://voicevoz.com/listen/la_sinverguenza/radio.mp3",
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/la_sinverguenza.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@lasinverguanza",
@@ -73,10 +76,11 @@ export const stations: Station[] = [
   {
     id: "4",
     name: "Tu Salsa Radio",
-    ...parseLocation("America Latina"), // Simplified, city/state not specified in source for this one
+    ...parseLocation("America Latina"),
     tags: parseGenres("Musica-Salsa"),
     logoUrl: "https://i.imgur.com/YL3xXmR.png",
-    streamUrl: "https://voicevoz.com/listen/tu_salsa_radio/radio.mp3", // HTTP Stream
+    streamUrl: "https://voicevoz.com/listen/tu_salsa_radio/radio.mp3",
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/tu_salsa_radio.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@tusalsaradio",
@@ -88,10 +92,11 @@ export const stations: Station[] = [
     ...parseLocation("Mundo"),
     tags: parseGenres("Noticias del Mundo"),
     logoUrl: "https://i.imgur.com/4PD1ErK.png",
-    streamUrl: "https://voicevoz.com/listen/voicevoz/radio.mp3", // HTTP Stream
+    streamUrl: "https://voicevoz.com/listen/voicevoz/radio.mp3",
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/voicevoz.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/voicevoz/",
-    tiktokUrl: "https://www.instagram.com/voicevoz/", // TikTok link is an Instagram URL
+    tiktokUrl: "https://www.tiktok.com/@voicevoz",
     email: "contacto@emisorasdelmundo.com",
   },
   {
@@ -101,6 +106,7 @@ export const stations: Station[] = [
     tags: parseGenres("Rock, Pop"),
     logoUrl: "https://i.imgur.com/1pBUrrs.png",
     streamUrl: "https://stream.zeno.fm/nvziqeidbiouv",
+    metadataUrl: "https://voicevoz.com/api/nowplaying_static/amav_radio.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/artistasdelavoz?igsh=MTJiemt1NzJ4ZDVpZg==",
     tiktokUrl: "https://tiktok.com/@amavradio",
@@ -113,9 +119,10 @@ export const stations: Station[] = [
     tags: parseGenres("Música del Mundo"),
     logoUrl: "https://cdn-radiotime-logos.tunein.com/s232143d.png",
     streamUrl: "https://streamingufm.ufpso.edu.co/getStream",
+    metadataUrl: "https://streamingufm.ufpso.edu.co/status-json.xsl",
     whatsappUrl: "https://wa.me/573175828289",
     instagramUrl: "https://www.instagram.com/laufmradio/",
-    tiktokUrl: "https://www.instagram.com/laufmradio/", // TikTok link is an Instagram URL
+    tiktokUrl: "https://www.tiktok.com/@laufmradio",
     email: "contacto@emisorasdelmundo.com",
   },
   {
@@ -125,9 +132,10 @@ export const stations: Station[] = [
     tags: parseGenres("Salsa Merengue Reggaetón y Mas"),
     logoUrl: "https://esplendida.com.pe/images/logesplendidatransparente.png",
     streamUrl: "https://antares.dribbcast.com/proxy/esplendida/stream",
+    metadataUrl: "https://antares.dribbcast.com/api/stats/esplendida",
     whatsappUrl: "https://wa.me/51961002379",
     instagramUrl: "https://www.facebook.com/people/Espl%C3%A9ndidaradio-Trujillo/61552650565529/",
-    tiktokUrl: "https://www.facebook.com/people/Espl%C3%A9ndidaradio-Trujillo/61552650565529/", // TikTok link is a Facebook URL
+    tiktokUrl: "https://www.tiktok.com/@esplendidaradio",
     email: "contacto@emisorasdelmundo.com",
   },
   {
@@ -137,18 +145,20 @@ export const stations: Station[] = [
     tags: parseGenres("Rock - Pop - Baladas"),
     logoUrl: "https://www.orbitaradio.com.pe/wp-content/uploads/2024/06/LOGO-ORBITA-2024.png",
     streamUrl :"https://antares.dribbcast.com/proxy/orbitaradio/stream",
+    metadataUrl: "https://antares.dribbcast.com/api/stats/orbitaradio",
     whatsappUrl: "https://wa.me/51961002379",
     instagramUrl: "https://www.instagram.com/orbitaradiotrujillo/",
-    tiktokUrl: "https://www.instagram.com/laufmradio/", // TikTok link is an Instagram URL (La UFM's)
+    tiktokUrl: "https://www.tiktok.com/@orbitaradio",
     email: "contacto@emisorasdelmundo.com",
   },
   {
     id: "10",
     name: "Radio Catatumbo",
-    ...parseLocation("Ocaña Colombia"),
+    ...parseLocation("Ocaña - Colombia"),
     tags: parseGenres("Musica - Noticias"),
-    logoUrl: "https://i.imgur.com/IZQqWe0.jpeg", // WhatsApp CDN logo, might be unstable
+    logoUrl: "https://i.imgur.com/IZQqWe0.jpeg",
     streamUrl: "https://server1.intermediacolombia.com/8086/stream",
+    metadataUrl: "https://server1.intermediacolombia.com:8086/stats?sid=1&json=1",
     whatsappUrl: "https://wa.me/573133380747",
     instagramUrl: "https://instagram.com/radiocatatumbo",
     tiktokUrl: "https://tiktok.com/@radiocatatumbo",
@@ -161,6 +171,7 @@ export const stations: Station[] = [
     tags: parseGenres("Musica"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34847329_ico.png?ts=1747777720",
     streamUrl: "https://stream-173.zeno.fm/lhtrhyvmfuctv",
+    metadataUrl: "https://proxy.zeno.fm/api/zeno/nowplaying/lhtrhyvmfuctv",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://instagram.com/radiomia",
     tiktokUrl: "https://tiktok.com/@radiomia",

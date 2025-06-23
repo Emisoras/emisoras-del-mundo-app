@@ -19,7 +19,6 @@ interface AudioPlayerContextType {
   currentTime: number;
   seek: (time: number) => void;
   songTitle: string | null;
-  songImageUrl: string | null;
 }
 
 const AudioPlayerContext = createContext<AudioPlayerContextType | undefined>(undefined);
@@ -35,47 +34,107 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
 
   const [songTitle, setSongTitle] = useState<string | null>(null);
-  const [songImageUrl, setSongImageUrl] = useState<string | null>(null);
   const metadataIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
 
-  const clearMetadataInterval = useCallback(() => {
+  const updateTitle = useCallback((title: string | undefined | null, stationName: string) => {
+      const trimmedTitle = title?.trim();
+      if (trimmedTitle && trimmedTitle.toLowerCase() !== stationName.toLowerCase() && trimmedTitle !== '-' && trimmedTitle.length > 1) {
+          setSongTitle(trimmedTitle);
+      } else {
+          setSongTitle(stationName);
+      }
+  }, []);
+
+  const closeMetadataSources = useCallback(() => {
     if (metadataIntervalRef.current) {
       clearInterval(metadataIntervalRef.current);
       metadataIntervalRef.current = null;
     }
-  }, []);
-
-  const fetchAndSetMetadata = useCallback(async (zenoStreamId: string, stationName: string, stationLogo?: string) => {
-    try {
-      const response = await fetch(`https://proxy.zeno.fm/api/zeno/nowplaying/${zenoStreamId}`);
-      if (!response.ok) {
-        // console.warn(`Failed to fetch metadata for ${zenoStreamId}`);
-        setSongTitle(stationName || "En vivo");
-        setSongImageUrl(stationLogo || null);
-        return;
-      }
-      const data = await response.json();
-      if (data.title && data.title.trim() !== "") {
-        setSongTitle(data.title);
-      } else {
-        setSongTitle(stationName || "En vivo");
-      }
-      // Use Zeno image if available, otherwise fallback to station logo
-      setSongImageUrl(data.image_url || stationLogo || null);
-
-    } catch (error) {
-      // console.error("Error fetching metadata:", error);
-      setSongTitle(stationName || "En vivo");
-      setSongImageUrl(stationLogo || null);
+    if (eventSourceRef.current) {
+      eventSourceRef.current.close();
+      eventSourceRef.current = null;
     }
   }, []);
 
+  const fetchMetadata = useCallback(async (station: Station) => {
+    if (!station.metadataUrl) {
+        setSongTitle(station.name);
+        return;
+    }
+
+    try {
+        const signal = AbortSignal.timeout(8000);
+        const response = await fetch(station.metadataUrl, { signal, cache: 'no-store' });
+        if (!response.ok) {
+            throw new Error(`Metadata fetch failed with status: ${response.status}`);
+        }
+        const data = await response.json();
+        
+        let nowPlaying = station.name;
+        if (data.now_playing?.song?.text) { // AzuraCast format (voicevoz)
+            nowPlaying = data.now_playing.song.text;
+        } else if (data.title) { // Zeno.fm legacy format or Dribbcast
+            nowPlaying = data.title;
+        } else if (data.song) { // Some other formats
+            nowPlaying = data.song;
+        } else if (data.icestats?.source?.title) { // Icecast format
+            nowPlaying = data.icestats.source.title;
+        }
+        
+        updateTitle(nowPlaying, station.name);
+
+    } catch (error) {
+        console.warn(`Could not fetch metadata for ${station.name}:`, error);
+        setSongTitle(station.name);
+    }
+  }, [updateTitle]);
+
+  const subscribeToMetadata = useCallback((station: Station) => {
+    closeMetadataSources();
+
+    if (station.streamUrl.includes('zeno.fm/')) {
+        const streamId = station.streamUrl.split('/').pop();
+        if (streamId) {
+            const eventSourceUrl = `https://api.zeno.fm/mounts/metadata/subscribe/${streamId}`;
+            const es = new EventSource(eventSourceUrl);
+            
+            es.onmessage = (event) => {
+                const parsedData = JSON.parse(event.data);
+                if (parsedData.streamTitle) {
+                    updateTitle(parsedData.streamTitle, station.name);
+                }
+            };
+
+            es.onerror = () => {
+                console.warn(`EventSource error for ${station.name}. Closing connection and falling back to polling.`);
+                es.close();
+                if (station.metadataUrl) {
+                    fetchMetadata(station);
+                    metadataIntervalRef.current = setInterval(() => fetchMetadata(station), 15000);
+                } else {
+                    setSongTitle(station.name);
+                }
+            };
+            
+            eventSourceRef.current = es;
+            return;
+        }
+    }
+    
+    if (station.metadataUrl) {
+        fetchMetadata(station);
+        metadataIntervalRef.current = setInterval(() => fetchMetadata(station), 15000);
+    } else {
+        setSongTitle(station.name);
+    }
+
+  }, [closeMetadataSources, fetchMetadata, updateTitle]);
 
   const playStation = useCallback((station: Station) => {
-    clearMetadataInterval();
+    closeMetadataSources();
+    setCurrentStation(station);
     setSongTitle(station.name);
-    setSongImageUrl(station.logoUrl || null);
-    setCurrentStation(station); // Set currentStation before fetching metadata
 
     if (audioRef.current) {
       setIsLoading(true);
@@ -84,54 +143,35 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
       audioRef.current.play().then(() => {
         setIsPlaying(true);
         setIsLoading(false);
-
-        const zenoMatch = station.streamUrl.match(/zeno\.fm\/([a-zA-Z0-9\-_]+)/);
-        if (zenoMatch && zenoMatch[1]) {
-          const zenoStreamId = zenoMatch[1];
-          fetchAndSetMetadata(zenoStreamId, station.name, station.logoUrl);
-          metadataIntervalRef.current = setInterval(() => {
-            fetchAndSetMetadata(zenoStreamId, station.name, station.logoUrl);
-          }, 20000);
-        }
+        subscribeToMetadata(station);
       }).catch(error => {
         console.error(`Error playing station ${station.name} (URL: ${station.streamUrl}):`, error);
-        if (typeof window !== 'undefined' && window.location.protocol === 'https:' && station.streamUrl.startsWith('http:')) {
-          console.warn("This might be a mixed content issue. The application is served over HTTPS, but the stream URL is HTTP. Browsers typically block this for security reasons.");
-        }
         toast({
           title: "Error de reproducción",
-          description: `No se pudo reproducir ${station.name}. Verifique la URL o intente más tarde.`,
+          description: `No se pudo reproducir ${station.name}.`,
           variant: "destructive",
         });
         setIsPlaying(false);
         setIsLoading(false);
         setCurrentStation(null);
         setSongTitle(null);
-        setSongImageUrl(null);
+        closeMetadataSources();
       });
     }
-  }, [clearMetadataInterval, fetchAndSetMetadata, toast]);
+  }, [closeMetadataSources, subscribeToMetadata, toast]);
 
   const togglePlayPause = useCallback(() => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
         setIsPlaying(false);
-        clearMetadataInterval();
+        closeMetadataSources();
       } else if (currentStation) {
         setIsLoading(true);
         audioRef.current.play().then(() => {
           setIsPlaying(true);
           setIsLoading(false);
-          // Resume metadata polling if it's a Zeno stream
-          const zenoMatch = currentStation.streamUrl.match(/zeno\.fm\/([a-zA-Z0-9\-_]+)/);
-          if (zenoMatch && zenoMatch[1]) {
-            const zenoStreamId = zenoMatch[1];
-            fetchAndSetMetadata(zenoStreamId, currentStation.name, currentStation.logoUrl);
-            metadataIntervalRef.current = setInterval(() => {
-                fetchAndSetMetadata(zenoStreamId, currentStation.name, currentStation.logoUrl);
-            }, 20000);
-          }
+          subscribeToMetadata(currentStation);
         }).catch(error => {
           console.error("Error resuming playback:", error);
            toast({
@@ -144,7 +184,7 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
         });
       }
     }
-  }, [isPlaying, currentStation, clearMetadataInterval, fetchAndSetMetadata, toast]);
+  }, [isPlaying, currentStation, closeMetadataSources, subscribeToMetadata, toast]);
 
   const seek = (time: number) => {
     if (audioRef.current) {
@@ -159,32 +199,24 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.volume = volume;
       const handleLoadedMetadataEvent = () => setDuration(audio.duration);
       const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-      const handleCanPlay = () => {
-        setIsLoading(false);
-        if (currentStation && audio.paused && isPlaying) {
-             audio.play().catch(e => console.warn("Autoplay after canplay prevented:", e));
-        }
-      };
+      const handleCanPlay = () => setIsLoading(false);
       const handleWaiting = () => setIsLoading(true);
       const handlePlaying = () => {
           setIsPlaying(true);
           setIsLoading(false);
       };
-      const handlePause = () => {
-        // setIsPlaying(false); // This is handled by togglePlayPause or when audio element pauses itself
-      };
       const handleEnded = () => {
         setIsPlaying(false);
-        clearMetadataInterval();
+        closeMetadataSources();
       };
-      const handleError = () => {
+      const handleError = (e: Event) => {
         setIsLoading(false);
         setIsPlaying(false);
-        clearMetadataInterval();
+        closeMetadataSources();
         if(currentStation) {
           toast({
-            title: "Error de Stream",
-            description: `Problema con la emisora ${currentStation.name}.`,
+            title: `Error en ${currentStation.name}`,
+            description: "Problema con la emisora. Puede que no esté disponible.",
             variant: "destructive",
           });
         }
@@ -195,7 +227,6 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
       audio.addEventListener('canplay', handleCanPlay);
       audio.addEventListener('waiting', handleWaiting);
       audio.addEventListener('playing', handlePlaying);
-      audio.addEventListener('pause', handlePause);
       audio.addEventListener('ended', handleEnded);
       audio.addEventListener('error', handleError);
 
@@ -205,13 +236,12 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
         audio.removeEventListener('canplay', handleCanPlay);
         audio.removeEventListener('waiting', handleWaiting);
         audio.removeEventListener('playing', handlePlaying);
-        audio.removeEventListener('pause', handlePause);
         audio.removeEventListener('ended', handleEnded);
         audio.removeEventListener('error', handleError);
-        clearMetadataInterval(); // Cleanup on unmount
+        closeMetadataSources();
       };
     }
-  }, [volume, currentStation, isPlaying, toast, clearMetadataInterval, fetchAndSetMetadata]);
+  }, [volume, currentStation, toast, closeMetadataSources]);
 
 
   return (
@@ -227,8 +257,7 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
       duration,
       currentTime,
       seek,
-      songTitle,
-      songImageUrl
+      songTitle
     }}>
       {children}
       <audio ref={audioRef} crossOrigin="anonymous"/>
@@ -243,4 +272,3 @@ export const useAudioPlayer = () => {
   }
   return context;
 };
-

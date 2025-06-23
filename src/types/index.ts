@@ -14,6 +14,7 @@ export interface Station {
   instagramUrl?: string;
   tiktokUrl?: string;
   email?: string; // For the email link
+  metadataUrl?: string; // URL to fetch now-playing metadata
 }
 
 export interface Country {
