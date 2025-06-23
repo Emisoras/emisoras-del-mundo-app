@@ -40,7 +40,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Rock, Pop"),
     logoUrl: "https://i.imgur.com/wXXfnr5.png",
-    streamUrl: "https://stream.zeno.fm/uesa7ncxnp4uv",
+    streamUrl: "https://voicevoz.com/listen/radio_city_latino/radio.mp3",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/radio_city_88.9?igsh=em9sbjlrcnd1a3U4&utm_source=qr",
     tiktokUrl: "ingcamilo.toro19@gmail.com", // This is an email, will open mail client
@@ -84,7 +84,7 @@ export const stations: Station[] = [
   },
   {
     id: "5",
-    name: "Voice Voz",
+    name: "VoiceVoz",
     ...parseLocation("Mundo"),
     tags: parseGenres("Noticias del Mundo"),
     logoUrl: "https://i.imgur.com/4PD1ErK.png",
