@@ -64,7 +64,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Musica"),
     logoUrl: "https://www.appcreator24.com/srv/imgs/seccs/34932240_ico.png?ts=1748122262",
-    streamUrl: "https://stream.zeno.fm/gwxheaihf78tv",
+    streamUrl: "https://voicevoz.com/listen/la_sinverguenza/radio.mp3",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/emisorasdelmundo?utm_source=qr&igsh=MnY2aHl6ZThiejdu",
     tiktokUrl: "https://tiktok.com/@lasinverguanza",
