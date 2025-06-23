@@ -87,7 +87,7 @@ export const stations: Station[] = [
     name: "Voice Voz",
     ...parseLocation("Mundo"),
     tags: parseGenres("Noticias del Mundo"),
-    logoUrl: "https://i.imgur.com/x7Tvlet.png",
+    logoUrl: "https://i.imgur.com/4PD1ErK.png",
     streamUrl: "https://voicevoz.com/listen/voicevoz/radio.mp3", // HTTP Stream
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/voicevoz/",
