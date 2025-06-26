@@ -9,7 +9,7 @@ const parseGenres = (genreString: string): string[] => {
 const parseLocation = (locationString: string): { country: string, city: string | null, state: string | null, countryCode: string, stateCode: string | null } => {
   // Basic parsing, can be expanded
   if (locationString.toLowerCase().includes('ocaña')) {
-    return { country: 'Colombia', city: 'Ocaña', state: 'Norte de Santander', countryCode: 'CO', stateCode: 'NSA' };
+    return { country: 'Colombia', city: 'Ocaña', state: '', countryCode: 'CO', stateCode: 'NSA' };
   }
   if (locationString.toLowerCase() === 'america latina') {
     return { country: 'América Latina', city: null, state: null, countryCode: 'XL', stateCode: null };
