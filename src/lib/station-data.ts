@@ -105,7 +105,7 @@ export const stations: Station[] = [
     ...parseLocation("America Latina"),
     tags: parseGenres("Rock, Pop"),
     logoUrl: "https://i.imgur.com/1pBUrrs.png",
-    streamUrl: "https://stream.zeno.fm/nvziqeidbiouv",
+    streamUrl: "https://voicevoz.com/listen/amav_radio/radio.mp3",
     metadataUrl: "https://voicevoz.com/api/nowplaying_static/amav_radio.json",
     whatsappUrl: "https://wa.me/573008346736",
     instagramUrl: "https://www.instagram.com/artistasdelavoz?igsh=MTJiemt1NzJ4ZDVpZg==",
