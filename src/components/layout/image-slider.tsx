@@ -6,8 +6,6 @@ import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 
 interface ImageSliderProps {
   images: { src: string; alt: string; dataAiHint?: string }[];
@@ -16,10 +14,9 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ images, interval = 5000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const isMobile = useIsMobile();
   const whatsappUrl = "https://wa.me/51941319613";
 
-  const slidesPerPage = isMobile ? 1 : 2;
+  const slidesPerPage = 2;
 
   const nextSlide = useCallback(() => {
     setCurrentIndex((prevIndex) => {
@@ -39,68 +36,49 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
   };
 
   useEffect(() => {
-    // Reset index if slidesPerPage changes to avoid being out of bounds
-    setCurrentIndex(0);
-  }, [isMobile]);
-
-  useEffect(() => {
     if (images.length <= slidesPerPage) return;
     const autoPlayTimer = setInterval(nextSlide, interval);
     return () => clearInterval(autoPlayTimer);
   }, [nextSlide, interval, images.length, slidesPerPage]);
 
-  if (!images || images.length === 0 || currentIndex >= images.length) {
+  if (!images || images.length === 0) {
     return null;
   }
-
-  const currentImage1 = images[currentIndex];
-  const currentImage2 = !isMobile && images.length > currentIndex + 1 ? images[currentIndex + 1] : null;
 
   return (
     <div className="relative w-full">
       <div className="flex justify-center items-center gap-4 overflow-hidden">
-        {currentImage1 && (
-           <a 
-            href={whatsappUrl} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className={cn("block transition-all hover:scale-105", isMobile ? "w-full" : "w-1/2")}
-          >
-            <Card className="shadow-md overflow-hidden">
-              <CardContent className="p-0">
-                <Image
-                  src={currentImage1.src}
-                  alt={currentImage1.alt}
-                  width={300}
-                  height={150}
-                  className="object-cover w-full h-auto aspect-[2/1]"
-                  data-ai-hint={currentImage1.dataAiHint}
-                />
-              </CardContent>
-            </Card>
-          </a>
-        )}
-        {currentImage2 && (
-          <a 
-            href={whatsappUrl} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="block w-1/2 transition-all hover:scale-105"
-          >
-            <Card className="shadow-md overflow-hidden">
-              <CardContent className="p-0">
-                <Image
-                  src={currentImage2.src}
-                  alt={currentImage2.alt}
-                  width={300}
-                  height={150}
-                  className="object-cover w-full h-auto aspect-[2/1]"
-                  data-ai-hint={currentImage2.dataAiHint}
-                />
-              </CardContent>
-            </Card>
-          </a>
-        )}
+        {Array.from({ length: slidesPerPage }).map((_, index) => {
+            const imageIndex = currentIndex + index;
+            // If the image index is out of bounds, render an empty placeholder to maintain layout
+            if (imageIndex >= images.length) {
+              return <div key={index} className="w-1/2" />;
+            }
+            const image = images[imageIndex];
+            
+            return (
+              <a 
+                key={imageIndex}
+                href={whatsappUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block w-1/2 transition-all hover:scale-105"
+              >
+                <Card className="shadow-md overflow-hidden">
+                  <CardContent className="p-0">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={300}
+                      height={150}
+                      className="object-cover w-full h-auto aspect-[2/1]"
+                      data-ai-hint={image.dataAiHint}
+                    />
+                  </CardContent>
+                </Card>
+              </a>
+            );
+        })}
       </div>
       {images.length > slidesPerPage && (
         <>

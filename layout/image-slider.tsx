@@ -14,71 +14,79 @@ interface ImageSliderProps {
 
 export default function ImageSlider({ images, interval = 5000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const whatsappUrl = "https://wa.me/51941319613";
+
+  const slidesPerPage = 2;
 
   const nextSlide = useCallback(() => {
-    setCurrentIndex((prevIndex) => (prevIndex + 2 >= images.length ? 0 : prevIndex + 2));
-  }, [images.length]);
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex + slidesPerPage;
+      return nextIndex >= images.length ? 0 : nextIndex;
+    });
+  }, [images.length, slidesPerPage]);
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 2 < 0 ? images.length - (images.length % 2 === 0 ? 2 : 1) : prevIndex - 2));
+    setCurrentIndex((prevIndex) => {
+      if (prevIndex - slidesPerPage < 0) {
+        // Go to the last possible page
+        return Math.floor((images.length - 1) / slidesPerPage) * slidesPerPage;
+      }
+      return prevIndex - slidesPerPage;
+    });
   };
 
   useEffect(() => {
-    if (images.length <= 2) return; // No need to slide if 2 or fewer images
+    if (images.length <= slidesPerPage) return;
     const autoPlayTimer = setInterval(nextSlide, interval);
     return () => clearInterval(autoPlayTimer);
-  }, [nextSlide, interval, images.length]);
+  }, [nextSlide, interval, images.length, slidesPerPage]);
 
   if (!images || images.length === 0) {
     return null;
   }
 
-  const currentImage1 = images[currentIndex];
-  const currentImage2 = images.length > 1 ? images[(currentIndex + 1) % images.length] : null;
-  
-  // Ensure we don't show the same image twice if there's an odd number and we are at the end
-  const displaySecondImage = images.length > 1 && (currentIndex + 1) < images.length;
-
-
   return (
     <div className="relative w-full">
       <div className="flex justify-center items-center gap-4 overflow-hidden">
-        {currentImage1 && (
-          <Card className="w-1/2 shadow-md overflow-hidden">
-            <CardContent className="p-0">
-              <Image
-                src={currentImage1.src}
-                alt={currentImage1.alt}
-                width={300}
-                height={150}
-                className="object-cover w-full h-auto aspect-[2/1]"
-                data-ai-hint={currentImage1.dataAiHint}
-              />
-            </CardContent>
-          </Card>
-        )}
-        {displaySecondImage && currentImage2 && (
-          <Card className="w-1/2 shadow-md overflow-hidden">
-            <CardContent className="p-0">
-              <Image
-                src={currentImage2.src}
-                alt={currentImage2.alt}
-                width={300}
-                height={150}
-                className="object-cover w-full h-auto aspect-[2/1]"
-                data-ai-hint={currentImage2.dataAiHint}
-              />
-            </CardContent>
-          </Card>
-        )}
+        {Array.from({ length: slidesPerPage }).map((_, index) => {
+            const imageIndex = currentIndex + index;
+            // If the image index is out of bounds, render an empty placeholder to maintain layout
+            if (imageIndex >= images.length) {
+              return <div key={index} className="w-1/2" />;
+            }
+            const image = images[imageIndex];
+            
+            return (
+              <a 
+                key={imageIndex}
+                href={whatsappUrl} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="block w-1/2 transition-all hover:scale-105"
+              >
+                <Card className="shadow-md overflow-hidden">
+                  <CardContent className="p-0">
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      width={300}
+                      height={150}
+                      className="object-cover w-full h-auto aspect-[2/1]"
+                      data-ai-hint={image.dataAiHint}
+                    />
+                  </CardContent>
+                </Card>
+              </a>
+            );
+        })}
       </div>
-      {images.length > 2 && (
+      {images.length > slidesPerPage && (
         <>
           <Button
             variant="outline"
             size="icon"
             className="absolute left-0 top-1/2 -translate-y-1/2 transform bg-background/50 hover:bg-background/80 backdrop-blur-sm rounded-full -ml-2 z-10"
-            onClick={prevSlide}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); prevSlide(); }}
             aria-label="Anterior"
           >
             <ChevronLeft className="h-6 w-6" />
@@ -87,7 +95,7 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
             variant="outline"
             size="icon"
             className="absolute right-0 top-1/2 -translate-y-1/2 transform bg-background/50 hover:bg-background/80 backdrop-blur-sm rounded-full -mr-2 z-10"
-            onClick={nextSlide}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); nextSlide(); }}
             aria-label="Siguiente"
           >
             <ChevronRight className="h-6 w-6" />
