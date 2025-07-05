@@ -1,4 +1,3 @@
-
 import type { Station } from '@/types';
 
 const parseGenres = (genreString: string): string[] => {
@@ -166,6 +165,19 @@ export const stations: Station[] = [
   },
   {
     id: "11",
+    name: "Ocaña Stereo",
+    ...parseLocation("Colombia"),
+    tags: parseGenres("Musica"),
+    logoUrl: "https://i.imgur.com/oCH7TO2.jpeg",
+    streamUrl: "https://play10.tikast.com:20156/stream",
+    metadataUrl: "https://play10.tikast.com:20156/stats?sid=1&json=1",
+    whatsappUrl: "https://wa.me/573008346736",
+    instagramUrl: "https://instagram.com/ocanastereo",
+    tiktokUrl: "https://tiktok.com/@ocanastereo",
+    email: "contacto@emisorasdelmundo.com",
+  },
+  {
+    id: "12",
     name: "Radiomia",
     ...parseLocation("Colombia"),
     tags: parseGenres("Musica"),

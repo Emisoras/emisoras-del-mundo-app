@@ -1,4 +1,3 @@
-
 "use client";
 
 import type { Station } from '@/types';
@@ -58,37 +57,58 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const fetchMetadata = useCallback(async (station: Station) => {
-    if (!station.metadataUrl) {
-        setSongTitle(station.name);
-        return;
+    const getTitleFromJson = (data: any): string | null => {
+        if (!data) return null;
+        // AzuraCast (voicevoz)
+        if (data.now_playing?.song?.text) return data.now_playing.song.text;
+        // Dribbcast
+        if (data.song) return data.song;
+        // Shoutcast v2 (Ocaña Stereo, Radio Catatumbo)
+        if (data.songtitle) return data.songtitle;
+        // Icecast (La UFM Estereo)
+        if (data.icestats?.source?.title) return data.icestats.source.title;
+        // Another common Icecast format (if source is an array)
+        if (Array.isArray(data.icestats?.source) && data.icestats.source[0]?.title) return data.icestats.source[0].title;
+        
+        return null;
     }
 
-    try {
-        const signal = AbortSignal.timeout(8000);
-        const response = await fetch(station.metadataUrl, { signal, cache: 'no-store' });
-        if (!response.ok) {
-            throw new Error(`Metadata fetch failed with status: ${response.status}`);
+    // --- Strategy 1: Direct fetch from metadataUrl if provided ---
+    if (station.metadataUrl) {
+        try {
+            const signal = AbortSignal.timeout(8000);
+            const response = await fetch(station.metadataUrl, { signal, cache: 'no-store' });
+            if (!response.ok) throw new Error(`Direct metadata fetch failed with status ${response.status}`);
+            
+            const data = await response.json();
+            const title = getTitleFromJson(data);
+            
+            if (title) {
+                updateTitle(title, station.name);
+                return; // Success! No need to continue.
+            }
+            console.warn(`Could not parse title from direct metadataUrl for ${station.name}`, data);
+        } catch (error) {
+            console.warn(`Direct metadata fetch failed for ${station.name}:`, error);
         }
-        const data = await response.json();
-        
-        let nowPlaying = station.name;
-        if (data.now_playing?.song?.text) { // AzuraCast format (voicevoz)
-            nowPlaying = data.now_playing.song.text;
-        } else if (data.title) { // Zeno.fm legacy format or Dribbcast
-            nowPlaying = data.title;
-        } else if (data.song) { // Some other formats
-            nowPlaying = data.song;
-        } else if (data.icestats?.source?.title) { // Icecast format
-            nowPlaying = data.icestats.source.title;
-        }
-        
-        updateTitle(nowPlaying, station.name);
+    }
 
+    // --- Strategy 2: Use the voicevoz proxy as a fallback ---
+    try {
+        const proxyUrl = `https://voicevoz.com/api.php?url=${encodeURIComponent(station.streamUrl)}`;
+        const signal = AbortSignal.timeout(8000);
+        const response = await fetch(proxyUrl, { signal });
+        if (!response.ok) throw new Error('Proxy request failed');
+        
+        const data = await response.json();
+        const title = getTitleFromJson(data) || data.title;
+        updateTitle(title, station.name);
     } catch (error) {
-        console.warn(`Could not fetch metadata for ${station.name}:`, error);
-        setSongTitle(station.name);
+        console.warn(`Could not fetch metadata for ${station.name} via proxy either. Falling back to station name.`, error);
+        updateTitle(station.name, station.name); // Final fallback
     }
   }, [updateTitle]);
+
 
   const subscribeToMetadata = useCallback((station: Station) => {
     closeMetadataSources();
@@ -100,21 +120,21 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
             const es = new EventSource(eventSourceUrl);
             
             es.onmessage = (event) => {
-                const parsedData = JSON.parse(event.data);
-                if (parsedData.streamTitle) {
-                    updateTitle(parsedData.streamTitle, station.name);
+                try {
+                    const parsedData = JSON.parse(event.data);
+                    if (parsedData.streamTitle) {
+                        updateTitle(parsedData.streamTitle, station.name);
+                    }
+                } catch(e) {
+                     console.error('Error parsing Zeno metadata', e);
+                     updateTitle(station.name, station.name);
                 }
             };
 
             es.onerror = () => {
-                console.warn(`EventSource error for ${station.name}. Closing connection and falling back to polling.`);
+                console.warn(`EventSource error for ${station.name}. Closing connection.`);
                 es.close();
-                if (station.metadataUrl) {
-                    fetchMetadata(station);
-                    metadataIntervalRef.current = setInterval(() => fetchMetadata(station), 15000);
-                } else {
-                    setSongTitle(station.name);
-                }
+                updateTitle(station.name, station.name);
             };
             
             eventSourceRef.current = es;
@@ -122,12 +142,9 @@ export const AudioPlayerProvider = ({ children }: { children: ReactNode }) => {
         }
     }
     
-    if (station.metadataUrl) {
-        fetchMetadata(station);
-        metadataIntervalRef.current = setInterval(() => fetchMetadata(station), 15000);
-    } else {
-        setSongTitle(station.name);
-    }
+    // For all other station types, use the improved fetch method.
+    fetchMetadata(station);
+    metadataIntervalRef.current = setInterval(() => fetchMetadata(station), 15000);
 
   }, [closeMetadataSources, fetchMetadata, updateTitle]);
 
