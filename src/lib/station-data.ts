@@ -142,7 +142,7 @@ export const stations: Station[] = [
     name: "Orbita Radio",
     ...parseLocation("Perú"),
     tags: parseGenres("Rock - Pop - Baladas"),
-    logoUrl: "https://i.imgur.com/KyC1iP6.png",
+    logoUrl: "https://i.imgur.com/7yblhCc.png",
     streamUrl :"https://radiostreamingonline.com/listen/orbitaradio/live",
     metadataUrl: "https://radiostreamingonline.com/listen/orbitaradio/live",
     whatsappUrl: "https://wa.me/51961002379",
