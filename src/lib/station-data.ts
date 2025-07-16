@@ -77,7 +77,7 @@ export const stations: Station[] = [
     name: "Tu Salsa Radio",
     ...parseLocation("America Latina"),
     tags: parseGenres("Musica-Salsa"),
-    logoUrl: "https://i.imgur.com/YL3xXmR.png",
+    logoUrl: "https://i.imgur.com/s34fr0X.png",
     streamUrl: "https://voicevoz.com/listen/tu_salsa_radio/radio.mp3",
     metadataUrl: "https://voicevoz.com/api/nowplaying_static/tu_salsa_radio.json",
     whatsappUrl: "https://wa.me/573008346736",
