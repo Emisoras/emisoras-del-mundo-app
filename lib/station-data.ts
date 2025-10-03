@@ -168,7 +168,7 @@ export const stations: Station[] = [
     name: "Ocaña Stereo",
     ...parseLocation("Colombia"),
     tags: parseGenres("Musica"),
-    logoUrl: "https://i.imgur.com/oCH7TO2.jpeg",
+    logoUrl: "https://i.imgur.com/W0iaQrP.jpeg",
     streamUrl: "https://play10.tikast.com:20156/stream",
     metadataUrl: "https://play10.tikast.com:20156/stats?sid=1&json=1",
     whatsappUrl: "https://wa.me/573008346736",

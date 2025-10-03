@@ -12,13 +12,14 @@ import ImageSlider from '@/components/layout/image-slider'; // Import ImageSlide
 // Define adImages here or pass as props if they vary
 const adImages = [
   { src: "https://i.imgur.com/g2ytUjl.png", alt: "Anuncio 1", dataAiHint: "advertisement banner" },
-  { src: "https://i.imgur.com/SEYv4V9.png", alt: "Anuncio 2", dataAiHint: "advertisement" },
-  { src: "https://i.imgur.com/Lu90kzG.png", alt: "Anuncio 3", dataAiHint: "promotion item" },
-  { src: "https://i.imgur.com/IQIVY9U.png", alt: "Anuncio 4", dataAiHint: "banner ad" },
-  { src: "https://i.imgur.com/sXxc0Rf.png", alt: "Anuncio 5", dataAiHint: "banner ad" },
-  { src: "https://i.imgur.com/MjZflf3.png", alt: "Anuncio 6", dataAiHint: "banner ad" },
-  { src: "https://i.imgur.com/FnnP7zB.png", alt: "Anuncio 7", dataAiHint: "banner ad" },
-  { src: "https://i.imgur.com/BgAbxhE.png", alt: "Anuncio 8", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/evO6XUa.png", alt: "Anuncio 2", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/SEYv4V9.png", alt: "Anuncio 3", dataAiHint: "advertisement" },
+  { src: "https://i.imgur.com/Lu90kzG.png", alt: "Anuncio 4", dataAiHint: "promotion item" },
+  { src: "https://i.imgur.com/IQIVY9U.png", alt: "Anuncio 5", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/sXxc0Rf.png", alt: "Anuncio 6", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/MjZflf3.png", alt: "Anuncio 7", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/FnnP7zB.png", alt: "Anuncio 8", dataAiHint: "banner ad" },
+  { src: "https://i.imgur.com/BgAbxhE.png", alt: "Anuncio 9", dataAiHint: "banner ad" },
 ];
 
 export default function BrowseView() {
