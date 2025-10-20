@@ -21,7 +21,7 @@ export default function ImageSlider({ interval = 5000 }: ImageSliderProps) {
   const slidersQuery = useMemo(() => query(collection(firestore, 'sliders'), orderBy('order')), [firestore]);
   const { data: images, loading } = useCollection<Slider>(slidersQuery);
 
-  const slidesPerPage = 3;
+  const slidesPerPage = 2;
 
   const nextSlide = useCallback(() => {
     if (!images) return;
@@ -65,7 +65,7 @@ export default function ImageSlider({ interval = 5000 }: ImageSliderProps) {
         {Array.from({ length: slidesPerPage }).map((_, index) => {
             const imageIndex = currentIndex + index;
             if (imageIndex >= images.length) {
-              return <div key={index} className="w-1/3" />;
+              return <div key={index} className="w-1/2" />;
             }
             const image = images[imageIndex];
             
@@ -75,7 +75,7 @@ export default function ImageSlider({ interval = 5000 }: ImageSliderProps) {
                 href={image.linkUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="block w-1/3 transition-all hover:scale-105"
+                className="block w-1/2 transition-all hover:scale-105"
               >
                 <Card className="shadow-md overflow-hidden">
                   <CardContent className="p-0">
