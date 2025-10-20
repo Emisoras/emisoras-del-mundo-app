@@ -21,7 +21,7 @@ export default function ImageSlider({ interval = 5000 }: ImageSliderProps) {
   const slidersQuery = useMemo(() => query(collection(firestore, 'sliders'), orderBy('order')), [firestore]);
   const { data: images, loading } = useCollection<Slider>(slidersQuery);
 
-  const slidesPerPage = 3;
+  const slidesPerPage = 2;
 
   const nextSlide = useCallback(() => {
     if (!images) return;
