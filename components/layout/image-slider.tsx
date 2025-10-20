@@ -1,34 +1,40 @@
 
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useFirestore, useCollection } from '@/firebase';
+import { collection, query, orderBy } from 'firebase/firestore';
+import type { Slider } from '@/types';
 
 interface ImageSliderProps {
-  images: { src: string; alt: string; dataAiHint?: string }[];
   interval?: number;
 }
 
-export default function ImageSlider({ images, interval = 5000 }: ImageSliderProps) {
+export default function ImageSlider({ interval = 5000 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const whatsappUrl = "https://wa.me/51941319613";
+  const firestore = useFirestore();
 
-  const slidesPerPage = 2;
+  const slidersQuery = useMemo(() => query(collection(firestore, 'sliders'), orderBy('order')), [firestore]);
+  const { data: images, loading } = useCollection<Slider>(slidersQuery);
+
+  const slidesPerPage = 3;
 
   const nextSlide = useCallback(() => {
+    if (!images) return;
     setCurrentIndex((prevIndex) => {
       const nextIndex = prevIndex + slidesPerPage;
       return nextIndex >= images.length ? 0 : nextIndex;
     });
-  }, [images.length, slidesPerPage]);
+  }, [images, slidesPerPage]);
 
   const prevSlide = () => {
+    if (!images) return;
     setCurrentIndex((prevIndex) => {
       if (prevIndex - slidesPerPage < 0) {
-        // Go to the last possible page
         return Math.floor((images.length - 1) / slidesPerPage) * slidesPerPage;
       }
       return prevIndex - slidesPerPage;
@@ -36,10 +42,18 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
   };
 
   useEffect(() => {
-    if (images.length <= slidesPerPage) return;
+    if (!images || images.length <= slidesPerPage) return;
     const autoPlayTimer = setInterval(nextSlide, interval);
     return () => clearInterval(autoPlayTimer);
-  }, [nextSlide, interval, images.length, slidesPerPage]);
+  }, [nextSlide, interval, images, slidesPerPage]);
+
+  if (loading) {
+    return (
+        <div className="flex justify-center items-center h-20">
+            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+        </div>
+    );
+  }
 
   if (!images || images.length === 0) {
     return null;
@@ -50,30 +64,30 @@ export default function ImageSlider({ images, interval = 5000 }: ImageSliderProp
       <div className="flex justify-center items-center gap-4 overflow-hidden">
         {Array.from({ length: slidesPerPage }).map((_, index) => {
             const imageIndex = currentIndex + index;
-            // If the image index is out of bounds, render an empty placeholder to maintain layout
             if (imageIndex >= images.length) {
-              return <div key={index} className="w-1/2" />;
+              return <div key={index} className="w-1/3" />;
             }
             const image = images[imageIndex];
             
             return (
               <a 
-                key={imageIndex}
-                href={whatsappUrl} 
+                key={image.id}
+                href={image.linkUrl} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="block w-1/2 transition-all hover:scale-105"
+                className="block w-1/3 transition-all hover:scale-105"
               >
                 <Card className="shadow-md overflow-hidden">
                   <CardContent className="p-0">
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      width={300}
-                      height={150}
-                      className="object-cover w-full h-auto aspect-[2/1]"
-                      data-ai-hint={image.dataAiHint}
-                    />
+                    <div className="w-full h-20 relative">
+                        <Image
+                            src={image.src}
+                            alt={image.alt}
+                            fill
+                            className="object-contain"
+                            data-ai-hint={image.dataAiHint}
+                        />
+                    </div>
                   </CardContent>
                 </Card>
               </a>

@@ -1,6 +1,7 @@
 
 export interface Station {
-  id: string;
+  id?: string; // Firestore document ID is optional until it's created
+  order: number;
   name: string;
   streamUrl: string;
   logoUrl?: string;
@@ -15,6 +16,15 @@ export interface Station {
   tiktokUrl?: string;
   email?: string; // For the email link
   metadataUrl?: string; // URL to fetch now-playing metadata
+}
+
+export interface Slider {
+  id?: string;
+  src: string;
+  alt: string;
+  linkUrl: string;
+  order: number;
+  dataAiHint?: string;
 }
 
 export interface Country {

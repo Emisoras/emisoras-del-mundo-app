@@ -113,7 +113,6 @@ export default function FullScreenPlayer() {
     currentTime,
     seek,
     songTitle,
-    songImageUrl,
   } = useAudioPlayer();
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const [localIsFavorite, setLocalIsFavorite] = useState(false);
@@ -156,7 +155,7 @@ export default function FullScreenPlayer() {
 
   const isLiveStream = duration === Infinity || duration === 0 || isNaN(duration);
 
-  const displayImageUrl = songImageUrl || currentStation.logoUrl;
+  const displayImageUrl = currentStation.logoUrl;
   const displaySongTitle = songTitle || currentStation.name;
   const displayTags = currentStation.tags?.join(', ') || 'Música Variada';
 
@@ -188,8 +187,7 @@ export default function FullScreenPlayer() {
             width={192}
             height={192}
             className="w-40 h-40 md:w-48 md:h-48 rounded-lg shadow-lg aspect-square object-cover mb-6"
-            data-ai-hint="radio logo album art"
-            key={displayImageUrl} // Added key to force re-render on image change
+            data-ai-hint="radio logo"
           />
         ) : (
           <div className="w-40 h-40 md:w-48 md:h-48 rounded-lg shadow-lg bg-muted flex items-center justify-center mb-6">
