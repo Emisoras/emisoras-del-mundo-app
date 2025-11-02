@@ -1,7 +1,9 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import AppProviders from '@/components/providers/app-providers';
+import SplashGate from '@/components/layout/splash-gate';
 
 export const metadata: Metadata = {
   title: 'Emisoras del Mundo',
@@ -35,7 +37,9 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground min-h-screen flex flex-col">
         <AppProviders>
-          <div className="flex-grow">{children}</div>
+          <SplashGate>
+            <div className="flex-grow">{children}</div>
+          </SplashGate>
           <Toaster />
         </AppProviders>
       </body>

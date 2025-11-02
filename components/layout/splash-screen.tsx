@@ -15,11 +15,11 @@ export default function SplashScreen({ onFinished }: SplashScreenProps) {
   useEffect(() => {
     const timer1 = setTimeout(() => {
       setStage(1); // Move to logo stage
-    }, 2000); // Show loading for 2 seconds
+    }, 1000); // Show loading for 1 second
 
     const timer2 = setTimeout(() => {
       onFinished(); // Finish splash after total 4 seconds
-    }, 4000); // Total splash duration 4 seconds
+    }, 4000); // Total splash duration 4 seconds (1s loading + 3s logo)
 
     return () => {
       clearTimeout(timer1);
@@ -43,6 +43,7 @@ export default function SplashScreen({ onFinished }: SplashScreenProps) {
             width={200}
             height={80}
             priority
+            className="object-contain"
             data-ai-hint="emisoras radio"
           />
           <h1 className="text-3xl font-bold text-primary mt-4">Emisoras del Mundo</h1>
